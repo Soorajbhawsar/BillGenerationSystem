@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anant Vastralok2 </title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+<div class="calculator">
+    <h1>Anant Vastralok Calculator</h1>
+
+    <form onsubmit="calculate(event)">
+        <input type="number" name="number" placeholder="Enter number" required>
+        <div class="result" id="result"></div>
+        <div class="buttons">
+            <button type="button" class="btn-number" onclick="appendNumber('7')">7</button>
+            <button type="button" class="btn-number" onclick="appendNumber('8')">8</button>
+            <button type="button" class="btn-number" onclick="appendNumber('9')">9</button>
+
+            <button type="button" class="btn-number" onclick="appendNumber('4')">4</button>
+            <button type="button" class="btn-number" onclick="appendNumber('5')">5</button>
+            <button type="button" class="btn-number" onclick="appendNumber('6')">6</button>
+
+            <button type="button" class="btn-number" onclick="appendNumber('1')">1</button>
+            <button type="button" class="btn-number" onclick="appendNumber('2')">2</button>
+            <button type="button" class="btn-number" onclick="appendNumber('3')">3</button>
+
+            <button type="button" class="btn-number" onclick="appendNumber('0')">0</button>
+            <button type="button" class="btn-clear" onclick="clearInput()">C</button>
+            <button type="submit" class="btn-calculate">Calculate</button>
+        </div>
+    </form>
+    <a href="bill.html">Generate Bill</a>
+</div>
+<script src="script.js"></script>
+
+</body>
+</html>

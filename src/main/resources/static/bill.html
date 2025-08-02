@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bill Generation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="calculator">
+  <h1>Bill Generation</h1>
+
+  <form onsubmit="generateBill(event)">
+    <input type="text" name="customerName" placeholder="Customer Name" required>
+    <input type="tel" name="phoneNumber" placeholder="Phone Number" required>
+    <input type="number" name="amount" placeholder="Amount" step="0.01" required>
+
+    <div class="message" id="message"></div>
+    <div class="bill-details" id="billDetails"></div>
+
+    <button type="submit" class="btn-generate-bill">Generate Bill</button>
+  </form>
+
+  <a href="index.html">Back to Calculator</a>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
