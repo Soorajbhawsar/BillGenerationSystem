@@ -10,9 +10,8 @@ async function calculate(e) {
     e.preventDefault();
     const inputField = document.querySelector('input[name="number"]');
     const number = inputField.value;
-    const API_BASE_URL = "";
-    try {
 
+    try {
         const response = await fetch('/api/calculate', {
             method: 'POST',
             headers: {
@@ -20,12 +19,16 @@ async function calculate(e) {
             },
             body: `number=${number}`
         });
-        
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
         const result = await response.text();
         document.getElementById("result").textContent = result;
-        inputField.value = ""; // Clear the input field after calculation
+        inputField.value = "";
     } catch (error) {
-        document.getElementById("result").textContent = "Error: " + error;
+        document.getElementById("result").textContent = "Error: " + error.message;
     }
 }
 
@@ -44,11 +47,15 @@ async function generateBill(e) {
             body: params
         });
 
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
         const billDetails = await response.text();
         document.getElementById("billDetails").textContent = billDetails;
         document.getElementById("message").textContent = "Bill generated successfully!";
         form.reset();
     } catch (error) {
-        document.getElementById("message").textContent = "Error: " + error;
+        document.getElementById("message").textContent = "Error: " + error.message;
     }
 }
