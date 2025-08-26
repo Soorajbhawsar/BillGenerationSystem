@@ -4,22 +4,14 @@ FROM eclipse-temurin:17-jdk-jammy as builder
 # Set working directory
 WORKDIR /app
 
-# Copy gradle files (if using Gradle)
-# COPY gradlew .
-# COPY gradle gradle
-# COPY build.gradle .
-# COPY settings.gradle .
-# COPY src src
-
-# For Maven projects, copy pom.xml first
+# Copy Maven files
 COPY pom.xml .
 COPY mvnw .
 COPY .mvn .mvn
 COPY src src
 
-# Build the application
-# For Gradle: RUN ./gradlew build
-RUN ./mvnw clean package -DskipTests
+# Give execute permission to mvnw and build the application
+RUN chmod +x mvnw && ./mvnw clean package -DskipTests
 
 # Second stage to create a smaller runtime image
 FROM eclipse-temurin:17-jre-jammy
