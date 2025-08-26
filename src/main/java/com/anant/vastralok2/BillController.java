@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@Cacheable("bills")
 @RequestMapping("/api/bill")
 public class BillController {
 
