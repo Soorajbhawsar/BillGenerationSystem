@@ -59,3 +59,51 @@ async function generateBill(e) {
         document.getElementById("message").textContent = "Error: " + error.message;
     }
 }
+
+
+    async function deleteBill(id) {
+        if (confirm('Are you sure you want to delete this bill?')) {
+            try {
+                const response = await fetch(`/api/bill/delete/${id}`, {
+                    method: 'POST'
+                });
+
+                if (!response.ok) {
+                    throw new Error(await response.text());
+                }
+
+                alert('Bill deleted successfully');
+                window.location.reload();
+            } catch (error) {
+                alert('Error deleting bill: ' + error.message);
+            }
+        }
+    }
+
+    function filterBills() {
+        const searchTerm = document.getElementById('searchName').value.toLowerCase();
+        const rows = document.querySelectorAll('#detailedBillsTable tbody tr');
+        let found = false;
+
+        rows.forEach(row => {
+            const cell = row.querySelector('.customer-name');
+            const customerName = cell.textContent.toLowerCase();
+            if (customerName.includes(searchTerm)) {
+                row.style.display = '';
+                found = true;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        document.getElementById('no-results').style.display = found || searchTerm === '' ? 'none' : 'block';
+    }
+
+    function resetSearch() {
+        document.getElementById('searchName').value = '';
+        const rows = document.querySelectorAll('#detailedBillsTable tbody tr');
+        rows.forEach(row => {
+            row.style.display = '';
+        });
+        document.getElementById('no-results').style.display = 'none';
+    }
