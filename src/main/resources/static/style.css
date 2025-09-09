@@ -1,349 +1,378 @@
-/* style.css - Professional Responsive Styles for Vastralok2 */
-
-:root {
-  --primary-color: #2c3e50;
-  --secondary-color: #3498db;
-  --accent-color: #e74c3c;
-  --light-color: #ecf0f1;
-  --dark-color: #2c3e50;
-  --success-color: #27ae60;
-  --warning-color: #f39c12;
-  --border-radius: 8px;
-  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --transition: all 0.3s ease;
-}
-
+/* Global Styles */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-  color: #333;
-  background-color: #f8f9fa;
-  padding: 0;
-  margin: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: #333;
 }
 
 .calculator {
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: white;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-}
-
-h1, h2 {
-  color: var(--primary-color);
-  text-align: center;
-  margin-bottom: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    padding: 25px;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 h1 {
-  font-size: 1.8rem;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--secondary-color);
+    text-align: center;
+    margin-bottom: 25px;
+    color: #4a5568;
+    font-size: 1.8rem;
+    font-weight: 600;
 }
 
+/* Form Elements */
 form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 input[type="text"],
 input[type="tel"],
-input[type="number"],
-input[type="search"],
-.search-input {
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: var(--border-radius);
-  font-size: 16px;
-  transition: var(--transition);
-  width: 100%;
+input[type="number"] {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all 0.3s;
 }
 
 input:focus {
-  outline: none;
-  border-color: var(--secondary-color);
-  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
 }
 
-.buttons {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-top: 15px;
+/* Buttons */
+button, .nav-btn {
+    padding: 12px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
 }
 
-button, .nav-btn, .search-btn {
-  padding: 12px 20px;
-  border: none;
-  border-radius: var(--border-radius);
-  font-size: 16px;
-  cursor: pointer;
-  transition: var(--transition);
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
+.btn-generate-bill, .btn-calculate {
+    background: #667eea;
+    color: white;
+    font-weight: 600;
+}
+
+.btn-generate-bill:hover, .btn-calculate:hover {
+    background: #5a67d8;
+    transform: translateY(-2px);
 }
 
 .btn-number {
-  background-color: var(--light-color);
-  color: var(--dark-color);
+    background: #e2e8f0;
+    color: #4a5568;
 }
 
 .btn-number:hover {
-  background-color: #dde4e6;
-}
-
-.btn-calculate, .btn-generate-bill {
-  background-color: var(--secondary-color);
-  color: white;
-  grid-column: span 3;
-}
-
-.btn-calculate:hover, .btn-generate-bill:hover {
-  background-color: #2980b9;
+    background: #cbd5e0;
 }
 
 .btn-clear {
-  background-color: var(--warning-color);
-  color: white;
+    background: #fc8181;
+    color: white;
 }
 
 .btn-clear:hover {
-  background-color: #e67e22;
-}
-
-.nav-btn {
-  background-color: var(--primary-color);
-  color: white;
-  margin: 5px;
-  width: calc(50% - 10px);
-  text-align: center;
-}
-
-.nav-btn:hover {
-  background-color: #1a252f;
-}
-
-.search-btn {
-  background-color: var(--primary-color);
-  color: white;
-  margin: 5px 0;
-}
-
-.search-btn:hover {
-  background-color: #1a252f;
+    background: #f56565;
 }
 
 .delete-btn {
-  background-color: var(--accent-color);
-  color: white;
-  padding: 8px 12px;
-  border-radius: var(--border-radius);
-  border: none;
-  cursor: pointer;
+    background: #fc8181;
+    color: white;
+    padding: 6px 12px;
+    font-size: 14px;
 }
 
 .delete-btn:hover {
-  background-color: #c0392b;
+    background: #f56565;
 }
 
-.view-btn {
-  background-color: var(--secondary-color);
-  color: white;
-  padding: 8px 12px;
-  border-radius: var(--border-radius);
-  text-decoration: none;
-  display: inline-block;
+/* Navigation */
+.navigation-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: center;
 }
 
-.view-btn:hover {
-  background-color: #2980b9;
+.nav-btn {
+    background: #48bb78;
+    color: white;
+    min-width: 120px;
 }
 
+.nav-btn:hover {
+    background: #38a169;
+    transform: translateY(-2px);
+}
+
+/* Calculator buttons grid */
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Result and Messages */
 .result, .message {
-  padding: 15px;
-  border-radius: var(--border-radius);
-  margin: 15px 0;
-  text-align: center;
-  font-weight: bold;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 15px;
+    text-align: center;
+    font-weight: 500;
 }
 
 .result {
-  background-color: #e8f4fc;
-  border-left: 4px solid var(--secondary-color);
+    background: #c6f6d5;
+    color: #22543d;
 }
 
 .message {
-  background-color: #eafaf1;
-  border-left: 4px solid var(--success-color);
+    background: #bee3f8;
+    color: #1a365d;
 }
 
 .bill-details {
-  white-space: pre-line;
-  background-color: #f9f9f9;
-  padding: 15px;
-  border-radius: var(--border-radius);
-  border: 1px solid #eee;
-  margin: 15px 0;
-  font-family: monospace;
-  line-height: 1.8;
+    white-space: pre-line;
+    background: #f7fafc;
+    padding: 15px;
+    border-radius: 6px;
+    margin-top: 15px;
+    border-left: 4px solid #667eea;
+    font-family: monospace;
+    line-height: 1.6;
+}
+/* bill generate phone number optional or xxxxxx1234 */
+.phone-masked {
+    font-family: monospace;
+    letter-spacing: 1px;
 }
 
-.navigation-links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 20px;
+.optional-field::after {
+    content: " (Optional)";
+    font-size: 0.8em;
+    color: #718096;
+    font-weight: normal;
+}
+/* Bills View Styles */
+.summary-section {
+    margin-top: 20px;
 }
 
-.search-section {
-  margin-bottom: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+.year-header, .month-header, .day-header {
+    background: #f7fafc;
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid #667eea;
+    transition: all 0.3s;
 }
 
-.summary-section, .perfect-scroll-table {
-  width: 100%;
-  overflow-x: auto;
+.year-header {
+    background: #ebf4ff;
+    border-left-color: #667eea;
+}
+
+.month-header {
+    background: #f0fff4;
+    border-left-color: #48bb78;
+    margin-left: 10px;
+}
+
+.day-header {
+    background: #fff5f5;
+    border-left-color: #fc8181;
+    margin-left: 20px;
+}
+
+.year-header:hover, .month-header:hover, .day-header:hover {
+    transform: translateX(5px);
+}
+
+.toggle-icon {
+    margin-right: 8px;
+    transition: transform 0.3s;
+}
+
+.collapsed .toggle-icon {
+    transform: rotate(-90deg);
+}
+
+.months-wrapper, .month-container, .day-container {
+    display: none;
+    margin-left: 20px;
+}
+
+.year-header:not(.collapsed) + .months-wrapper,
+.month-header:not(.collapsed) + .month-container,
+.day-header:not(.collapsed) + .day-container {
+    display: block;
+}
+
+.total-amount {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+/* Table Styles */
+.perfect-scroll-table {
+    overflow-x: auto;
+    margin-bottom: 15px;
 }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
-  background-color: white;
-  box-shadow: var(--box-shadow);
-  border-radius: var(--border-radius);
-  overflow: hidden;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
 }
 
 th, td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 th {
-  background-color: var(--primary-color);
-  color: white;
-  font-weight: 600;
+    background: #f7fafc;
+    font-weight: 600;
+    color: #4a5568;
 }
 
 tr:hover {
-  background-color: #f5f5f5;
+    background: #f7fafc;
 }
 
-.total-row, .grand-total-row {
-  font-weight: bold;
-  background-color: #f8f9fa;
+/* Search Section */
+.search-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
-.total-row td, .grand-total-row td {
-  border-top: 2px solid #ddd;
+.search-input {
+    flex: 1;
+    min-width: 150px;
+}
+
+.search-btn {
+    background: #667eea;
+    color: white;
+}
+
+.search-btn:hover {
+    background: #5a67d8;
 }
 
 #no-results {
-  display: none;
-  text-align: center;
-  padding: 20px;
-  color: #777;
-  font-style: italic;
+    text-align: center;
+    padding: 20px;
+    color: #718096;
+    display: none;
 }
 
 /* Responsive Design */
-@media (min-width: 768px) {
-  .calculator {
-    max-width: 600px;
-    margin: 30px auto;
-    padding: 30px;
-  }
+@media (max-width: 768px) {
+    .calculator {
+        padding: 20px;
+    }
 
-  h1 {
-    font-size: 2.2rem;
-  }
+    h1 {
+        font-size: 1.5rem;
+    }
 
-  .navigation-links {
-    justify-content: space-between;
-  }
+    .buttons {
+        grid-template-columns: repeat(3, 1fr);
+    }
 
-  .nav-btn {
-    width: auto;
-  }
-}
+    .navigation-links {
+        flex-direction: column;
+    }
 
-@media (min-width: 1024px) {
-  .calculator {
-    max-width: 800px;
-  }
+    .search-section {
+        flex-direction: column;
+    }
 
-  .buttons {
-    gap: 15px;
-  }
+    .search-input, .search-btn {
+        width: 100%;
+    }
 
-  .btn-calculate, .btn-generate-bill {
-    grid-column: span 1;
-  }
+    .year-header, .month-header, .day-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .total-amount {
+        align-self: flex-end;
+    }
 }
 
 @media (max-width: 480px) {
-  .calculator {
-    padding: 15px;
-  }
+    body {
+        padding: 10px;
+    }
 
-  h1 {
-    font-size: 1.5rem;
-  }
+    .calculator {
+        padding: 15px;
+        border-radius: 8px;
+    }
 
-  th, td {
-    padding: 8px 10px;
-    font-size: 14px;
-  }
+    h1 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
 
-  .navigation-links {
-    flex-direction: column;
-    align-items: center;
-  }
+    input[type="text"],
+    input[type="tel"],
+    input[type="number"],
+    button,
+    .nav-btn {
+        padding: 10px;
+        font-size: 14px;
+    }
 
-  .nav-btn {
-    width: 100%;
-    margin: 5px 0;
-  }
+    .bill-details {
+        padding: 10px;
+        font-size: 14px;
+    }
 
-  .search-section {
-    flex-direction: column;
-  }
+    th, td {
+        padding: 8px 5px;
+        font-size: 14px;
+    }
 
-  .search-btn {
-    width: 100%;
-  }
-}
-
-/* Print styles for bills */
-@media print {
-  body {
-    background: white;
-  }
-
-  .calculator {
-    box-shadow: none;
-    padding: 0;
-  }
-
-  .navigation-links,
-  .search-section,
-  .delete-btn,
-  .view-btn {
-    display: none;
-  }
+    .delete-btn {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
 }
