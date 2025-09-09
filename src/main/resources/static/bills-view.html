@@ -10,7 +10,12 @@
 <div class="calculator">
     <h1>Bill Records</h1>
 
-    <div class="search-section" th:if="${bills != null}">
+    <div class="navigation-links">
+        <a href="/bill.html" class="nav-btn">Generate New Bill</a>
+        <a href="/index.html" class="nav-btn">Back to Calculator</a>
+    </div>
+
+    <div class="search-section">
         <input type="text" id="searchName" placeholder="Search by customer name" class="search-input">
         <button onclick="filterBills()" class="search-btn">Search</button>
         <button onclick="resetSearch()" class="search-btn">Reset</button>
@@ -18,80 +23,80 @@
 
     <p id="no-results">No bills found.</p>
 
-    <div class="summary-section" th:unless="${bills != null}">
-        <h2>Daily Summary</h2>
-        <div class="perfect-scroll-table" style="max-height: 60vh;">
-            <table id="dailySummaryTable">
-                <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Total Amount (₹)</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="entry : ${dailyTotals}">
-                    <td>
-                        <a th:href="@{/api/bill/view/{date}(date=${entry.key})}"
-                           th:text="${entry.key}">Date</a>
-                    </td>
-                    <td th:text="${#numbers.formatDecimal(entry.value, 1, 2)}"></td>
-                    <td>
-                        <a th:href="@{/api/bill/view/{date}(date=${entry.key})}" class="view-btn">View</a>
-                    </td>
-                </tr>
-                </tbody>
-                <tfoot>
-                <tr class="grand-total-row">
-                    <td><strong>Grand Total</strong></td>
-                    <td th:text="${#numbers.formatDecimal(grandTotal, 1, 2)}"></td>
-                    <td></td>
-                </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
+    <div class="summary-section">
+        <h2>Bills Summary</h2>
+        <div class="year-container">
+            <!-- Yearly Grouping -->
+            <div th:each="yearEntry : ${yearlyGroupedBills}">
+                <div class="year-header collapsed" onclick="toggleCollapse(this)">
+                    <span>
+                        <span class="toggle-icon">▼</span>
+                        Year: <span th:text="${yearEntry.key}"></span>
+                    </span>
+                    <span class="total-amount" th:text="'Total: ₹' + ${#numbers.formatDecimal(yearEntry.value.total, 1, 2)}"></span>
+                </div>
 
-    <div th:if="${bills != null}">
-        <h2 >Bills for <span th:text="${date}"></span></h2>
-        <div class="perfect-scroll-table" style="max-height: 60vh;">
-            <table id="detailedBillsTable">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Customer Name</th>
-                    <th>Phone Number</th>
-                    <th>Amount (₹)</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="bill : ${bills}">
-                    <td th:text="${bill.id}"></td>
-                    <td class="customer-name" th:text="${bill.customerName}"></td>
-                    <td class="phone-masked" th:text="${bill.phoneNumber} ?: 'N/A'" th:title="${bill.phoneNumber} ?: ''"></td>
-                    <td th:text="${#numbers.formatDecimal(bill.amount, 1, 2)}"></td>
-                    <td>
-                        <button class="delete-btn" th:onclick="'deleteBill(' + ${bill.id} + ')'">Delete</button>
-                    </td>
-                </tr>
-                </tbody>
-                <tfoot>
-                <tr class="total-row">
-                    <td colspan="3">Total</td>
-                    <td th:text="${#numbers.formatDecimal(totalAmount, 1, 2)}"></td>
-                    <td></td>
-                </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
+                <div class="months-wrapper">
+                    <!-- Monthly Grouping -->
+                    <div th:each="monthEntry : ${yearEntry.value.months}">
+                        <div class="month-header collapsed" onclick="toggleCollapse(this)">
+                            <span>
+                                <span class="toggle-icon">▼</span>
+                                Month: <span th:text="${monthEntry.value.monthName}"></span>
+                            </span>
+                            <span class="total-amount" th:text="'Total: ₹' + ${#numbers.formatDecimal(monthEntry.value.total, 1, 2)}"></span>
+                        </div>
 
-    <div class="navigation-links">
-        <a href="/bill.html" class="nav-btn">Generate New Bill</a>
-        <a href="/index.html" class="nav-btn">Back to Calculator</a>
+                        <div class="month-container">
+                            <!-- Daily Grouping -->
+                            <div th:each="dayEntry : ${monthEntry.value.days}">
+                                <div class="day-header collapsed" onclick="toggleCollapse(this)">
+                                    <span>
+                                        <span class="toggle-icon">▼</span>
+                                        Date: <span th:text="${dayEntry.key}"></span>
+                                    </span>
+                                    <span class="total-amount" th:text="'Total: ₹' + ${#numbers.formatDecimal(dayEntry.value.total, 1, 2)}"></span>
+                                </div>
+
+                                <div class="day-container">
+                                    <div class="perfect-scroll-table" style="max-height: 300px;">
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Customer Name</th>
+                                                <th>Phone Number</th>
+                                                <th>Amount (₹)</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="bill : ${dayEntry.value.bills}">
+                                                <td th:text="${bill.id.dailySequence}"></td>
+                                                <td class="customer-name" th:text="${bill.customerName}"></td>
+                                                <td class="phone-masked" th:text="${bill.phoneNumber} ?: 'N/A'" th:title="${bill.phoneNumber} ?: ''"></td>
+                                                <td th:text="${#numbers.formatDecimal(bill.amount, 1, 2)}"></td>
+                                                <td>
+                                                    <button class="delete-btn"
+                                                            th:data-date="${bill.id.date}"
+                                                            th:data-sequence="${bill.id.dailySequence}"
+                                                            onclick="deleteBill(this.getAttribute('data-date'), this.getAttribute('data-sequence'))">
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-    <script src="script.js"></script>
+<script src="/script.js"></script>
 </body>
 </html>
