@@ -6,9 +6,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "bills")
 public class Bill {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private BillId id;
 
     @Column(nullable = false)
     private String customerName;
@@ -19,15 +18,15 @@ public class Bill {
     @Column(nullable = false)
     private double amount;
 
-    @Column(nullable = false)
-    private LocalDate date;
+    public LocalDate getDate() {
+        return id != null ? id.getDate() : null;
+    }
 
-    // Getters and Setters
-    public Long getId() {
+    public BillId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(BillId id) {
         this.id = id;
     }
 
@@ -53,13 +52,5 @@ public class Bill {
 
     public void setAmount(double amount) {
         this.amount = amount;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
     }
 }
