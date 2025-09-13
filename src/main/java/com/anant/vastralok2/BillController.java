@@ -1,82 +1,38 @@
 package com.anant.vastralok2;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.net.URI;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/bill")
 public class BillController {
+    private final BillService billService;
 
-    @Value("${fast2sms.api.key}")
-    private String apiKey;
-
-    private final BillRepository billRepository;
-
-    public BillController(BillRepository billRepository) {
-        this.billRepository = billRepository;
+    public BillController(BillService billService) {
+        this.billService = billService;
     }
 
     @PostMapping("/generate")
     public ResponseEntity<String> generateBill(
             @RequestParam String customerName,
             @RequestParam(required = false) String phoneNumber,
-            @RequestParam double amount) {
+            @RequestParam double amount,
+            @RequestParam(required = false, defaultValue = "true") boolean sendSms) {
 
-        // Only validate if phone number is provided
-        if (phoneNumber != null && !phoneNumber.isEmpty() && !phoneNumber.matches("\\d{10}")) {
-            return ResponseEntity.badRequest().body("Invalid phone number. Must be 10 digits or empty.");
-        }
+        Bill bill = billService.saveBill(customerName, phoneNumber, amount);
+        String billDetails = billService.generateBillDetails(customerName, amount);
 
-        // Save to database
-        Bill bill = new Bill();
-        bill.setCustomerName(customerName);
-        bill.setPhoneNumber(phoneNumber);
-        bill.setAmount(amount);
-        bill.setDate(LocalDate.now());
-        billRepository.save(bill);
-
-        String billDetails = generateBillDetails(customerName, amount);
-
-        // Only send SMS if phone number is provided
-        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+        if (sendSms && phoneNumber != null && !phoneNumber.isEmpty()) {
             try {
-                String message = "Thank you for shopping with us!\n" + billDetails;
-
-                String requestBody = "sender_id=FSTSMS" +
-                        "&message=" + URLEncoder.encode(message, "UTF-8") +
-                        "&language=english" +
-                        "&route=q" +
-                        "&numbers=" + phoneNumber;
-
-                HttpClient client = HttpClient.newHttpClient();
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create("https://www.fast2sms.com/dev/bulkV2"))
-                        .header("authorization", apiKey)
-                        .header("Content-Type", "application/x-www-form-urlencoded")
-                        .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                        .build();
-
-                HttpResponse<String> response = client.send(request,
-                        HttpResponse.BodyHandlers.ofString());
-
-                System.out.println("SMS API Response: " + response.body());
-
+                billService.sendSmsNotification(phoneNumber, billDetails);
             } catch (Exception e) {
-                System.out.println("Error sending SMS: " + e.getMessage());
-                return ResponseEntity.internalServerError().body("Bill generated but failed to send SMS: " + e.getMessage());
+                return ResponseEntity.ok()
+                        .header("Content-Type", "text/plain")
+                        .body(billDetails + "\n\nNote: SMS could not be sent. Error: " + e.getMessage());
             }
         }
 
@@ -88,50 +44,32 @@ public class BillController {
     @GetMapping("/view")
     public ModelAndView viewBills() {
         ModelAndView modelAndView = new ModelAndView("bills-view");
-        List<Bill> allBills = billRepository.findAllByOrderByDateDesc();
-
-        // Group bills by date with total amount
-        Map<LocalDate, Double> dailyTotals = allBills.stream()
-                .collect(Collectors.groupingBy(
-                        Bill::getDate,
-                        Collectors.summingDouble(Bill::getAmount)
-                ));
-
-        modelAndView.addObject("allBills", allBills);
-        modelAndView.addObject("dailyTotals", dailyTotals);
-        modelAndView.addObject("grandTotal", allBills.stream().mapToDouble(Bill::getAmount).sum());
-
+        modelAndView.addObject("yearlyGroupedBills", billService.getGroupedBills());
         return modelAndView;
     }
 
     @GetMapping("/view/{date}")
     public ModelAndView viewBillsByDate(@PathVariable LocalDate date) {
         ModelAndView modelAndView = new ModelAndView("bills-view");
-        List<Bill> billsForDate = billRepository.findByDate(date);
-        Double totalAmount = billRepository.getTotalAmountByDate(date);
-
-        modelAndView.addObject("bills", billsForDate);
-        modelAndView.addObject("totalAmount", totalAmount != null ? totalAmount : 0.0);
+        modelAndView.addObject("bills", billService.getBillsByDate(date));
+        modelAndView.addObject("totalAmount", billService.getTotalAmountByDate(date));
         modelAndView.addObject("date", date);
-
         return modelAndView;
     }
 
-    @PostMapping("/delete/{id}")
-    public ResponseEntity<String> deleteBill(@PathVariable Long id) {
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteBill(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam Long dailySequence) {
         try {
-            billRepository.deleteById(id);
+            BillId billId = new BillId();
+            billId.setDate(date);
+            billId.setDailySequence(dailySequence);
+            billService.deleteBill(billId);
             return ResponseEntity.ok("Bill deleted successfully");
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error deleting bill: " + e.getMessage());
+            return ResponseEntity.internalServerError()
+                    .body("Error deleting bill: " + e.getMessage());
         }
-    }
-
-    private String generateBillDetails(String customerName, double amount) {
-        return "Bill for " + customerName +
-                "\nTotal Price: =₹ " + String.format("%.2f", amount + (amount * 0.10)) +
-                "\nDiscount:    =₹ " + String.format("%.2f", amount * 0.10) +
-                "\nFinal Price: =₹ " + String.format("%.2f", amount) +
-                "\n\nThank you for Visiting!\nAnant Vestralok, Maksi";
     }
 }
