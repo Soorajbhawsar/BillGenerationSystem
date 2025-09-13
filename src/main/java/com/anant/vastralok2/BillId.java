@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Embeddable
 public class BillId implements java.io.Serializable {
-    @Column(name = "bill_date", nullable = false)
+    @Column(name = "date", nullable = false)
     private LocalDate date;
 
     @Column(name = "daily_sequence", nullable = false)
